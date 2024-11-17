@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
+from django.utils.translation import gettext_lazy as _
 
 
 def comprobante_directory_path(instance, filename):
@@ -21,43 +22,50 @@ def temario_directory_path(instance, filename):
         return f'temarios/curso_{instance.id}/{filename}'
 
 class UserManager(BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
         """Creates and saves a new user"""
         if not email:
-            raise ValueError('Debe Ingresar una dirección de correo')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+            raise ValueError(_('Debe ingresar una dirección de correo'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, password=None, **extra_fields):
         """Creates and saves a new super user"""
-        user = self.create_user(email, password)
-        user.is_staff = True
-        user.is_superuser = True
-        user.is_active = True
-        user.save(using=self._db)
-
-        return user
-
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model that suppors using email instead of username"""
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=100)
-    apellidoMaterno = models.CharField(max_length=100)
-    apellidoPaterno = models.CharField(max_length=100)
-    is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+    """Custom user model that supports using email instead of username"""
+    email = models.EmailField(_('email address'), max_length=255, unique=True)
+    name = models.CharField(_('name'), max_length=100)
+    apellido_paterno = models.CharField(_('apellido paterno'), max_length=100, null=True, blank=True,)
+    apellido_materno = models.CharField(_('apellido materno'), max_length=100, null=True, blank=True,)
+    is_active = models.BooleanField(_('active'), default=False)
+    is_staff = models.BooleanField(_('staff status'), default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'apellido_paterno', 'apellido_materno']
 
     class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
         app_label = 'core'
+
+    def __str__(self):
+        return self.email
+
+    def get_full_name(self):
+        return f"{self.name} {self.apellido_paterno} {self.apellido_materno}"
+
+    def get_short_name(self):
+        return self.name
 
 class Servicio(models.Model):
     nombre = models.CharField(max_length=100)

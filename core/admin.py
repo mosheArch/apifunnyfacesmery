@@ -1,14 +1,27 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from core.models import Servicio, Curso, Producto, Reserva, InscripcionCurso, Pedido, ItemPedido, User
 
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from core.models import Servicio, Curso, Producto, Reserva, InscripcionCurso, Pedido, ItemPedido, User
+from django.utils.translation import gettext_lazy as _
 # Registrar el modelo de Usuario personalizado
 
 @admin.register(User)
-class UsuarioAdmin(UserAdmin):
-    list_display = ('email', 'name', 'apellidoMaterno', 'apellidoMaterno', 'is_active', 'is_staff')
-    list_filter = ('is_active', 'is_staff')
-    search_fields = ('email', 'nombre', 'apellido')
+class UserAdmin(BaseUserAdmin):
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('name', 'apellido_paterno', 'apellido_materno')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (_('Important dates'), {'fields': ('last_login',)}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'name', 'apellido_paterno', 'apellido_materno', 'password1', 'password2'),
+        }),
+    )
+    list_display = ('email', 'name', 'apellido_paterno', 'apellido_materno', 'is_staff')
+    search_fields = ('email', 'name', 'apellido_paterno', 'apellido_materno')
     ordering = ('email',)
 
 # Registrar el modelo de Servicio
