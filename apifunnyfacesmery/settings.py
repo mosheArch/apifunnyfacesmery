@@ -149,12 +149,12 @@ PAYPAL_CLIENT_ID = 'tu_client_id_de_paypal'
 PAYPAL_CLIENT_SECRET = 'tu_client_secret_de_paypal'
 
 # Configuración de correo electrónico
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'tu_correo@gmail.com'
-EMAIL_HOST_PASSWORD = 'tu_contraseña_de_aplicación'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
