@@ -20,6 +20,6 @@ urlpatterns = [
     path('register/', auth.UserRegistrationView.as_view(), name='register'),
     path('login/', auth.CustomTokenObtainPairView.as_view(), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('password-reset/', auth.PasswordResetView.as_view(), name='password_reset'),
-    path('password-reset-confirm/', auth.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset/', auth.ResetPasswordView.as_view(), name='password_reset'),
+    path('reset-password/<uidb64>/<token>/', auth.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

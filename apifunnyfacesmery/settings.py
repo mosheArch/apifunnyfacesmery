@@ -149,12 +149,18 @@ PAYPAL_CLIENT_ID = 'tu_client_id_de_paypal'
 PAYPAL_CLIENT_SECRET = 'tu_client_secret_de_paypal'
 
 # Configuración de correo electrónico
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DJANGO_REST_LOOKUP_FIELD = 'email'
+DJANGO_REST_PASSWORDRESET_IP_ADDRESS_HEADER = 'HTTP_X_FORWARDED_FOR'
+HTTP_USER_AGENT_HEADER = 'HTTP_USER_AGENT'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.zoho.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "no-reply@funnyfacesmery.com"
+EMAIL_HOST_PASSWORD = "G6_J_n3Mici:cwG"
+
+
+FRONTEND_URL = 'http://192.168.68.136:8000'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

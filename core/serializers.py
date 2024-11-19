@@ -3,11 +3,6 @@ from .models import User, Servicio, Curso, Producto, MetodoPago, Reserva, Inscri
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.core.mail import send_mail
-from django.conf import settings
 
 User = get_user_model()
 
@@ -88,60 +83,20 @@ class BitacoraPagoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PasswordResetSerializer(serializers.Serializer):
+class ResetPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     def validate_email(self, value):
-        # Asegúrate de que el usuario existe
-        try:
-            user = User.objects.get(email=value)
-        except User.DoesNotExist:
-            raise serializers.ValidationError("No existe un usuario con este correo electrónico.")
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('No se encontró una cuenta asociada a este correo electrónico.')
         return value
 
-    def save(self):
-        email = self.validated_data['email']
-        user = User.objects.get(email=email)
-
-        # Genera el token
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-        # Envía el correo electrónico
-        reset_url = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"
-        send_mail(
-            'Restablecimiento de contraseña',
-            f'Utiliza este enlace para restablecer tu contraseña: {reset_url}',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-        )
-
-
 class PasswordResetConfirmSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    uid = serializers.CharField()
-    new_password = serializers.CharField(write_only=True, validators=[validate_password])
-    new_password2 = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
 
-    def validate(self, attrs):
-        if attrs['new_password'] != attrs['new_password2']:
-            raise serializers.ValidationError({"new_password": "Las contraseñas no coinciden."})
-        return attrs
-
-    def save(self):
-        uid = self.validated_data['uid']
-        token = self.validated_data['token']
-        password = self.validated_data['new_password']
-
-        try:
-            uid = force_bytes(urlsafe_base64_decode(uid))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            raise serializers.ValidationError("Enlace de restablecimiento inválido")
-
-        if not default_token_generator.check_token(user, token):
-            raise serializers.ValidationError("El token no es válido o ha expirado")
-
-        user.set_password(password)
-        user.save()
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError("Las contraseñas no coinciden.")
+        validate_password(data['new_password'])
+        return data

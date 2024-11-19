@@ -22,7 +22,8 @@ from apifunnyfacesmery import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('core.urls')),
+    path('api/', include('core.urls')),  # Assuming 'core' is your app name
+    path('', include('core.urls')),  # Add this line to include non-api urls
 ]
 
 if settings.DEBUG:
