@@ -186,7 +186,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "Funny Faces Mery",
     "site_header": "Funny Faces Mery",
     "site_brand": "Funny Faces Mery",
-    "site_logo": "/images/logodash.png",
-    "login_logo": "/images/logologin.png",
+    "site_logo": "/images/site_logo_funny.png",
+    "login_logo": "/images/login_logo_funny.png",
     "welcome_sign": "Bienvenido al sistema",
 }

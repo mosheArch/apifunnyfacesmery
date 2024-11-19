@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Pago Cancelado</h4>
+        <p>Tu pago ha sido cancelado. No se ha realizado ningún cargo.</p>
+        <hr>
+        <p class="mb-0">Si tienes alguna pregunta, por favor contáctanos.</p>
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+</div>
+{% endblock %}

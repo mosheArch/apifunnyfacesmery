@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Bitácora de Pagos</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Tipo de Compra</th>
+                <th>Monto</th>
+                <th>Método de Pago</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+            <tr>
+                <td>{{ pago.usuario.email }}</td>
+                <td>{{ pago.get_tipo_compra_display }}</td>
+                <td>{{ pago.monto }}</td>
+                <td>{{ pago.metodo_pago.get_tipo_display }}</td>
+                <td>{{ pago.fecha_pago }}</td>
+                <td>{{ pago.estado }}</td>
+                <td>{{ pago.detalles }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
