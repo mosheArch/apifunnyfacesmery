@@ -31,7 +31,11 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.68.136"]
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
+
+CSRF_TRUSTED_ORIGINS = [os.getenv('CSRF_TRUSTED_ORIGINS')]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -59,8 +63,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware','corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'apifunnyfacesmery.urls'
 
@@ -153,18 +155,18 @@ PAYPAL_CLIENT_ID = 'tu_client_id_de_paypal'
 PAYPAL_CLIENT_SECRET = 'tu_client_secret_de_paypal'
 
 # Configuración de correo electrónico
-DJANGO_REST_LOOKUP_FIELD = 'email'
-DJANGO_REST_PASSWORDRESET_IP_ADDRESS_HEADER = 'HTTP_X_FORWARDED_FOR'
-HTTP_USER_AGENT_HEADER = 'HTTP_USER_AGENT'
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.zoho.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "no-reply@funnyfacesmery.com"
-EMAIL_HOST_PASSWORD = "G6_J_n3Mici:cwG"
+DJANGO_REST_LOOKUP_FIELD = os.getenv('DJANGO_REST_LOOKUP_FIELD')
+DJANGO_REST_PASSWORDRESET_IP_ADDRESS_HEADER = os.getenv('DJANGO_REST_PASSWORDRESET_IP_ADDRESS_HEADER')
+HTTP_USER_AGENT_HEADER = os.getenv('HTTP_USER_AGENT_HEADER')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
-FRONTEND_URL = 'http://192.168.68.136:8000'
+FRONTEND_URL = os.getenv('FRONTEND_URL')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
